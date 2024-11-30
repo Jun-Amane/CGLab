@@ -475,11 +475,23 @@ void CCGLabView::OnRButtonDown(UINT nFlags, CPoint point)
 		if (!m_currentPolygon->IsClosed()) {
 			m_currentPolygon->Close();
 
-			if (m_currentPolygonAlgorithm == MyGraphics::Polygon::ALGO_WEILER_ATHERTON ||
-				m_currentPolygonAlgorithm == MyGraphics::Polygon::ALGO_SCANLINE) {
+			if (m_currentPolygonAlgorithm == MyGraphics::Polygon::ALGO_SCANLINE) {
+				m_currentPolygon->GeneratePoints();
+				m_objects.push_back(m_currentPolygon);
+				m_isDrawingPolygon = false;
+			}
+			else if (m_currentPolygonAlgorithm == MyGraphics::Polygon::ALGO_WEILER_ATHERTON) {
 				m_currentPolygon->GeneratePoints();
 			}
 
+			Invalidate();
+		}
+		else if (!m_currentPolygon->HasSeed() &&
+			(m_currentPolygonAlgorithm == MyGraphics::Polygon::ALGO_SEEDFILL_4 ||
+				m_currentPolygonAlgorithm == MyGraphics::Polygon::ALGO_SEEDFILL_8)) {
+			// Set seed point and generate fill points
+			m_currentPolygon->SetSeed(MyGraphics::Point2D(point.x, point.y));
+			m_currentPolygon->GeneratePoints();
 			m_objects.push_back(m_currentPolygon);
 			m_isDrawingPolygon = false;
 			Invalidate();
