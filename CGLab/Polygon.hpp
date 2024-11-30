@@ -6,6 +6,8 @@
 
 #pragma once
 #include "Point2D.hpp"
+#include "Matrix3x3.hpp"
+#include "Transform2D.hpp"
 #include "GraphicsObject.hpp"
 #include "IPolygonAlgorithm.hpp"
 #include <memory>
@@ -34,6 +36,8 @@ namespace MyGraphics {
         void DrawSeed(CDC* pDC, const Point2D& point);  // 绘制种子点
         bool HasSeed() const { return m_hasSeed; }  // 是否已设置种子点
 
+        void Transform(const Matrix3x3& matrix);
+
     private:
         Algorithm m_algorithm;
         std::vector<Point2D> m_vertices;
@@ -44,5 +48,8 @@ namespace MyGraphics {
         bool m_closed;                 // 多边形是否闭合
         std::vector<Point2D> m_points; // 用于填充的点集
         std::unique_ptr<Algorithms::IPolygonAlgorithm> m_polygonAlgorithm;
+
+    protected:
+        void TransformVertices(const Matrix3x3& matrix);
     };
 }

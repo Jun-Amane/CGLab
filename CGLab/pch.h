@@ -10,6 +10,9 @@
 // add headers that you want to pre-compile here
 #include "framework.h"
 
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 // 常用的Windows头文件
 #include <windows.h>
 #include <windowsx.h>

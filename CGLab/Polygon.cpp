@@ -123,3 +123,17 @@ void Polygon::Draw(CDC* pDC) {
     pDC->SelectObject(pOldPen);
     pDC->SelectObject(pOldBrush);
 }
+
+void Polygon::Transform(const Matrix3x3& matrix) {
+    TransformVertices(matrix);
+    // 如果已经生成了填充点，需要重新生成
+    if (m_closed) {
+        GeneratePoints();
+    }
+}
+
+void Polygon::TransformVertices(const Matrix3x3& matrix) {
+    for (auto& vertex : m_vertices) {
+        vertex = TransformPoint(vertex, matrix);
+    }
+}

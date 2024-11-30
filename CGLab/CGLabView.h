@@ -70,6 +70,11 @@ public:
 	afx_msg void OnPolygonX();
 	afx_msg void OnSeedfilling4();
 	afx_msg void OnSeedfilling8();
+	afx_msg void On2dtransformReflect();
+	afx_msg void On2dtransformTranslate();
+	afx_msg void On2dtransformRotate();
+	afx_msg void On2dtransformShear();
+	afx_msg void On2dtransformScale();
 };
 
 #ifndef _DEBUG  // debug version in CGLabView.cpp

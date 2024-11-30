@@ -1,6 +1,6 @@
 /*
  *
- * Models/Point2D.hpp
+ * Math/Point2D.hpp
  * Ziyu ZHOU @ SDAU
  * 26/11/24
  *

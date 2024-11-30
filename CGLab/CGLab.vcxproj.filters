@@ -22,6 +22,9 @@
     <Filter Include="Dialogs">
       <UniqueIdentifier>{ebab811b-aeae-41e7-8c9e-db6c349b411e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{ccc140de-2fea-4990-b586-1d5eeaa8114e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CGLab.h">
@@ -47,9 +50,6 @@
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Point2D.hpp">
-      <Filter>Models</Filter>
     </ClInclude>
     <ClInclude Include="LineInputDlg.hpp">
       <Filter>Dialogs</Filter>
@@ -98,6 +98,18 @@
     </ClInclude>
     <ClInclude Include="PolygonAlgorithms.hpp">
       <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformDlg.hpp">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="Point2D.hpp">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix3x3.hpp">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Transform2D.hpp">
+      <Filter>Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +160,15 @@
     </ClCompile>
     <ClCompile Include="PolygonAlgorithms.cpp">
       <Filter>Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformDlg.cpp">
+      <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix3x3.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform2D.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

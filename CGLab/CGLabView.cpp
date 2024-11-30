@@ -14,6 +14,7 @@
 #include "CGLabView.h"
 
 #include "Point2D.hpp"
+#include "Matrix3x3.hpp"
 #include "Line.hpp"
 #include "LineInputDlg.hpp"
 #include "ILineAlgorithm.hpp"
@@ -23,6 +24,10 @@
 #include "Ellipse.hpp"
 #include "EllipseInputDlg.hpp"
 #include "IEllipseAlgorithm.hpp"
+#include "Polygon.hpp"
+#include "Transform2D.hpp"
+#include "TransformDlg.hpp"
+#include "IPolygonAlgorithm.hpp"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -50,6 +55,11 @@ BEGIN_MESSAGE_MAP(CCGLabView, CView)
 	ON_COMMAND(ID_POLYGON_X, &CCGLabView::OnPolygonX)
 	ON_COMMAND(ID_SEEDFILLING_4, &CCGLabView::OnSeedfilling4)
 	ON_COMMAND(ID_SEEDFILLING_8, &CCGLabView::OnSeedfilling8)
+	ON_COMMAND(ID_2DTRANSFORM_REFLECT, &CCGLabView::On2dtransformReflect)
+	ON_COMMAND(ID_2DTRANSFORM_TRANSLATE, &CCGLabView::On2dtransformTranslate)
+	ON_COMMAND(ID_2DTRANSFORM_ROTATE, &CCGLabView::On2dtransformRotate)
+	ON_COMMAND(ID_2DTRANSFORM_SHEAR, &CCGLabView::On2dtransformShear)
+	ON_COMMAND(ID_2DTRANSFORM_SCALE, &CCGLabView::On2dtransformScale)
 END_MESSAGE_MAP()
 
 // CCGLabView construction/destruction
@@ -339,4 +349,101 @@ void CCGLabView::OnSeedfilling8()
 	m_currentPolygon = std::make_shared<MyGraphics::Polygon>();
 	m_currentPolygon->SetAlgorithm(MyGraphics::Polygon::ALGO_SEEDFILL_8);
 	m_currentPolygonAlgorithm = MyGraphics::Polygon::ALGO_SEEDFILL_8;
+}
+
+
+void CCGLabView::On2dtransformReflect()
+{
+    if (m_objects.empty()) return;
+    
+    ReflectDlg dlg;
+    if (dlg.DoModal() == IDOK) {
+        auto polygon = std::dynamic_pointer_cast<MyGraphics::Polygon>(m_objects.back());
+        if (polygon) {
+            MyGraphics::Matrix3x3 matrix;
+            switch (dlg.m_type) {
+                case 0: // x轴对称
+                    matrix = MyGraphics::Transform::ReflectX();
+                    break;
+                case 1: // y轴对称
+                    matrix = MyGraphics::Transform::ReflectY();
+                    break;
+                case 2: // 直线对称
+                    matrix = MyGraphics::Transform::Reflect(dlg.m_k, dlg.m_b);
+                    break;
+            }
+            polygon->Transform(matrix);
+            Invalidate();
+        }
+    }
+}
+
+
+void CCGLabView::On2dtransformTranslate()
+{
+	// 先绘制图形，再进行变换
+	if (m_objects.empty()) return;
+    
+    TranslateDlg dlg;
+    if (dlg.DoModal() == IDOK) {
+        auto polygon = std::dynamic_pointer_cast<MyGraphics::Polygon>(m_objects.back());
+        if (polygon) {
+            auto matrix = MyGraphics::Transform::Translate(dlg.m_dx, dlg.m_dy);
+            polygon->Transform(matrix);
+            Invalidate();
+        }
+    }
+}
+
+
+void CCGLabView::On2dtransformRotate()
+{
+	if (m_objects.empty()) return;
+    
+    RotateDlg dlg;
+    if (dlg.DoModal() == IDOK) {
+        auto polygon = std::dynamic_pointer_cast<MyGraphics::Polygon>(m_objects.back());
+        if (polygon) {
+            auto matrix = MyGraphics::Transform::Rotate(
+                dlg.m_angle, 
+                MyGraphics::Point2D(dlg.m_cx, dlg.m_cy)
+            );
+            polygon->Transform(matrix);
+            Invalidate();
+        }
+    }}
+
+
+void CCGLabView::On2dtransformShear()
+{
+  if (m_objects.empty()) return;
+    
+    ShearDlg dlg;
+    if (dlg.DoModal() == IDOK) {
+        auto polygon = std::dynamic_pointer_cast<MyGraphics::Polygon>(m_objects.back());
+        if (polygon) {
+            auto matrix = MyGraphics::Transform::Shear(dlg.m_shx, dlg.m_shy);
+            polygon->Transform(matrix);
+            Invalidate();
+        }
+    }
+}
+
+
+void CCGLabView::On2dtransformScale()
+{
+	if (m_objects.empty()) return;
+
+	ScaleDlg dlg;
+	if (dlg.DoModal() == IDOK) {
+		auto polygon = std::dynamic_pointer_cast<MyGraphics::Polygon>(m_objects.back());
+		if (polygon) {
+			auto matrix = MyGraphics::Transform::Scale(
+				dlg.m_sx, dlg.m_sy,
+				MyGraphics::Point2D(dlg.m_cx, dlg.m_cy)
+			);
+			polygon->Transform(matrix);
+			Invalidate();
+		}
+	}
 }
