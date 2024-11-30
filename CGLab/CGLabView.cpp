@@ -44,6 +44,12 @@ BEGIN_MESSAGE_MAP(CCGLabView, CView)
 	ON_COMMAND(ID_CIRCLE_MIDPOINT, &CCGLabView::OnCircleMidpoint)
 	ON_COMMAND(ID_CIRCLE_BRESENHAM, &CCGLabView::OnCircleBresenham)
 	ON_COMMAND(ID_ELLIPSE_BRESENHAM, &CCGLabView::OnEllipseBresenham)
+	ON_WM_LBUTTONDOWN()
+	ON_WM_RBUTTONDOWN()
+	ON_WM_MOUSEMOVE()
+	ON_COMMAND(ID_POLYGON_X, &CCGLabView::OnPolygonX)
+	ON_COMMAND(ID_SEEDFILLING_4, &CCGLabView::OnSeedfilling4)
+	ON_COMMAND(ID_SEEDFILLING_8, &CCGLabView::OnSeedfilling8)
 END_MESSAGE_MAP()
 
 // CCGLabView construction/destruction
@@ -70,25 +76,46 @@ BOOL CCGLabView::PreCreateWindow(CREATESTRUCT& cs)
 
 void CCGLabView::OnDraw(CDC* pDC)
 {
-	CRect rect;
-	GetClientRect(&rect);
+    CRect rect;
+    GetClientRect(&rect);
 
-	CDC memDC;
-	CBitmap memBitmap;
-	memDC.CreateCompatibleDC(pDC);
-	memBitmap.CreateCompatibleBitmap(pDC, rect.Width(), rect.Height());
-	CBitmap* pOldBitmap = memDC.SelectObject(&memBitmap);
+    CDC memDC;
+    CBitmap memBitmap;
+    memDC.CreateCompatibleDC(pDC);
+    memBitmap.CreateCompatibleBitmap(pDC, rect.Width(), rect.Height());
+    CBitmap* pOldBitmap = memDC.SelectObject(&memBitmap);
 
-	memDC.FillSolidRect(rect, RGB(255, 255, 255));
+    memDC.FillSolidRect(rect, RGB(255, 255, 255));
 
-	for (const auto& obj : m_objects) {
-		obj->Draw(&memDC);
-	}
+    // 绘制所有已完成的图形
+    for (const auto& obj : m_objects) {
+        obj->Draw(&memDC);
+    }
 
-	pDC->BitBlt(0, 0, rect.Width(), rect.Height(), &memDC, 0, 0, SRCCOPY);
+    // 绘制正在构建的多边形
+    if (m_isDrawingPolygon && m_currentPolygon) {
+        m_currentPolygon->Draw(&memDC);
 
-	memDC.SelectObject(pOldBitmap);
-	memBitmap.DeleteObject();
+        // 绘制预览线（虚线效果）
+        if (!m_currentPolygon->IsClosed() && !m_currentPolygon->GetVertices().empty()) {
+            CPen dashPen(PS_DASH, 1, RGB(128, 128, 128));
+            CPen* pOldPen = memDC.SelectObject(&dashPen);
+            
+            const auto& lastVertex = m_currentPolygon->GetVertices().back();
+            memDC.MoveTo(lastVertex.x, lastVertex.y);
+            memDC.LineTo(m_lastMousePos.x, m_lastMousePos.y);
+            
+            memDC.SelectObject(pOldPen);
+        }
+    }
+
+    // 绘制提示信息
+    DrawPrompt(&memDC);
+
+    pDC->BitBlt(0, 0, rect.Width(), rect.Height(), &memDC, 0, 0, SRCCOPY);
+
+    memDC.SelectObject(pOldBitmap);
+    memBitmap.DeleteObject();
 }
 
 // CCGLabView printing
@@ -209,4 +236,107 @@ void CCGLabView::OnEllipseBresenham()
 		m_objects.push_back(ellipse);
 		Invalidate();
 	}
+}
+
+void CCGLabView::ClearScreen() {
+	m_objects.clear();  // 清除所有图形对象
+	Invalidate();      // 强制重绘
+}
+
+void CCGLabView::DrawPrompt(CDC* pDC) {
+	if (!m_isDrawingPolygon || !m_currentPolygon) return;
+
+	CString prompt;
+	if (!m_currentPolygon->IsClosed()) {
+		prompt = _T("左键点击添加顶点，右键完成绘制");
+	}
+	else if (m_currentPolygonAlgorithm != MyGraphics::Polygon::ALGO_SCANLINE
+		&& !m_currentPolygon->HasSeed()) {
+		prompt = _T("请点击多边形内部选择种子点");
+	}
+
+	if (!prompt.IsEmpty()) {
+		// 设置文本样式
+		pDC->SetBkMode(TRANSPARENT);
+		pDC->SetTextColor(RGB(0, 0, 0));
+
+		// 在屏幕上方显示提示
+		CRect rect;
+		GetClientRect(&rect);
+		pDC->TextOut(10, 10, prompt);
+	}
+}
+
+void CCGLabView::OnLButtonDown(UINT nFlags, CPoint point)
+{
+	if (m_isDrawingPolygon && m_currentPolygon) {
+        if (!m_currentPolygon->IsClosed()) {
+            m_currentPolygon->AddVertex(MyGraphics::Point2D(point.x, point.y));
+            m_lastMousePos = point;  // 更新最后的鼠标位置
+            Invalidate();
+        }
+        else if (m_currentPolygonAlgorithm != MyGraphics::Polygon::ALGO_SCANLINE) {
+            // 如果是种子填充算法且多边形已闭合，则设置种子点
+            m_currentPolygon->SetSeed(MyGraphics::Point2D(point.x, point.y));
+            m_currentPolygon->GeneratePoints();
+            Invalidate();
+        }
+    }	CView::OnLButtonDown(nFlags, point);
+}
+
+
+void CCGLabView::OnRButtonDown(UINT nFlags, CPoint point)
+{
+	if (m_isDrawingPolygon && m_currentPolygon) {
+		if (!m_currentPolygon->IsClosed()) {
+			m_currentPolygon->Close();
+			if (m_currentPolygonAlgorithm == MyGraphics::Polygon::ALGO_SCANLINE) {
+				m_currentPolygon->GeneratePoints();
+			}
+			m_objects.push_back(m_currentPolygon);
+			Invalidate();
+		}
+	}
+
+
+	CView::OnRButtonDown(nFlags, point);
+}
+
+
+void CCGLabView::OnMouseMove(UINT nFlags, CPoint point)
+{
+	if (m_isDrawingPolygon && m_currentPolygon && !m_currentPolygon->IsClosed()) {
+		m_lastMousePos = point;
+		Invalidate();  // 重绘以更新预览线
+	}
+
+	CView::OnMouseMove(nFlags, point);
+}
+
+
+void CCGLabView::OnPolygonX()
+{
+	ClearScreen();  // 清屏
+	m_isDrawingPolygon = true;
+	m_currentPolygon = std::make_shared<MyGraphics::Polygon>();
+	m_currentPolygon->SetAlgorithm(MyGraphics::Polygon::ALGO_SCANLINE);
+	m_currentPolygonAlgorithm = MyGraphics::Polygon::ALGO_SCANLINE;
+}
+
+void CCGLabView::OnSeedfilling4()
+{
+	ClearScreen();
+	m_isDrawingPolygon = true;
+	m_currentPolygon = std::make_shared<MyGraphics::Polygon>();
+	m_currentPolygon->SetAlgorithm(MyGraphics::Polygon::ALGO_SEEDFILL_4);
+	m_currentPolygonAlgorithm = MyGraphics::Polygon::ALGO_SEEDFILL_4;
+}
+
+void CCGLabView::OnSeedfilling8()
+{
+	ClearScreen();
+	m_isDrawingPolygon = true;
+	m_currentPolygon = std::make_shared<MyGraphics::Polygon>();
+	m_currentPolygon->SetAlgorithm(MyGraphics::Polygon::ALGO_SEEDFILL_8);
+	m_currentPolygonAlgorithm = MyGraphics::Polygon::ALGO_SEEDFILL_8;
 }

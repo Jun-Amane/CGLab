@@ -43,8 +43,8 @@ std::vector<Point2D> MidpointLineAlgorithm::GeneratePoints(const Point2D& start,
 
 	// 处理垂直线
 	if (x1 == x2) {
-		int yStart = min(y1, y2);
-		int yEnd = max(y1, y2);
+		int yStart = std::min<int>(y1, y2);
+		int yEnd = std::max<int>(y1, y2);
 		for (int y = yStart; y <= yEnd; y++) {
 			points.push_back(Point2D(x1, y));
 		}

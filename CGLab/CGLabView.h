@@ -7,6 +7,7 @@
 #include "GraphicsObject.hpp"
 #include "Line.hpp"
 #include "Circle.hpp"
+#include "Polygon.hpp"
 
 class CCGLabView : public CView
 {
@@ -46,6 +47,12 @@ protected:
 	std::vector<std::shared_ptr<MyGraphics::GraphicsObject>> m_objects;
 	void HandleLineAlgorithm(MyGraphics::Line::Algorithm algo);
 	void HandleCircleAlgorithm(MyGraphics::Circle::Algorithm algoh);
+	bool m_isDrawingPolygon;
+	std::shared_ptr<MyGraphics::Polygon> m_currentPolygon;
+	MyGraphics::Polygon::Algorithm m_currentPolygonAlgorithm;
+	CPoint m_lastMousePos;  // 用于存储最后的鼠标位置
+	void ClearScreen();
+	void DrawPrompt(CDC* pDC);  // 绘制提示信息
 
 // Generated message map functions
 protected:
@@ -57,6 +64,12 @@ public:
 	afx_msg void OnCircleMidpoint();
 	afx_msg void OnCircleBresenham();
 	afx_msg void OnEllipseBresenham();
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnRButtonDown(UINT nFlags, CPoint point);
+	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg void OnPolygonX();
+	afx_msg void OnSeedfilling4();
+	afx_msg void OnSeedfilling8();
 };
 
 #ifndef _DEBUG  // debug version in CGLabView.cpp
