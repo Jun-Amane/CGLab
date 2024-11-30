@@ -187,12 +187,15 @@
     <ClInclude Include="Circle.hpp" />
     <ClInclude Include="CircleAlgorithms.hpp" />
     <ClInclude Include="CircleInputDlg.hpp" />
+    <ClInclude Include="ClipWindow.hpp" />
+    <ClInclude Include="ClipWindowDlg.hpp" />
     <ClInclude Include="Ellipse.hpp" />
     <ClInclude Include="EllipseAlgorithms.hpp" />
     <ClInclude Include="EllipseInputDlg.hpp" />
     <ClInclude Include="ICircleAlgorithm.hpp" />
     <ClInclude Include="IEllipseAlgorithm.hpp" />
     <ClInclude Include="ILineAlgorithm.hpp" />
+    <ClInclude Include="ILineClipAlgorithm.hpp" />
     <ClInclude Include="IPolygonAlgorithm.hpp" />
     <ClInclude Include="Line.hpp" />
     <ClInclude Include="LineAlgorithms.hpp" />
@@ -201,6 +204,7 @@
     <ClInclude Include="CGLabView.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GraphicsObject.hpp" />
+    <ClInclude Include="LineClipAlgorithms.hpp" />
     <ClInclude Include="LineInputDlg.hpp" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Matrix3x3.hpp" />
@@ -217,6 +221,7 @@
     <ClCompile Include="Circle.cpp" />
     <ClCompile Include="CircleAlgorithms.cpp" />
     <ClCompile Include="CircleInputDlg.cpp" />
+    <ClCompile Include="ClipWindowDlg.cpp" />
     <ClCompile Include="Ellipse.cpp" />
     <ClCompile Include="EllipseAlgorithms.cpp" />
     <ClCompile Include="EllipseInputDlg.cpp" />
@@ -225,6 +230,7 @@
     <ClCompile Include="CGLab.cpp" />
     <ClCompile Include="CGLabDoc.cpp" />
     <ClCompile Include="CGLabView.cpp" />
+    <ClCompile Include="LineClipAlgorithms.cpp" />
     <ClCompile Include="LineInputDlg.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="Matrix3x3.cpp" />

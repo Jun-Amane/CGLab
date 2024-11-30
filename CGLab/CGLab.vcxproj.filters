@@ -111,6 +111,18 @@
     <ClInclude Include="Transform2D.hpp">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="ClipWindow.hpp">
+      <Filter>Models</Filter>
+    </ClInclude>
+    <ClInclude Include="ILineClipAlgorithm.hpp">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="LineClipAlgorithms.hpp">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="ClipWindowDlg.hpp">
+      <Filter>Dialogs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CGLab.cpp">
@@ -169,6 +181,12 @@
     </ClCompile>
     <ClCompile Include="Transform2D.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="LineClipAlgorithms.cpp">
+      <Filter>Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="ClipWindowDlg.cpp">
+      <Filter>Dialogs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

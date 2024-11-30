@@ -28,6 +28,10 @@
 #include "Transform2D.hpp"
 #include "TransformDlg.hpp"
 #include "IPolygonAlgorithm.hpp"
+#include "ILineClipAlgorithm.hpp"
+#include "LineClipAlgorithms.hpp"
+#include "ClipWindow.hpp"
+#include "ClipWindowDlg.hpp"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -60,6 +64,7 @@ BEGIN_MESSAGE_MAP(CCGLabView, CView)
 	ON_COMMAND(ID_2DTRANSFORM_ROTATE, &CCGLabView::On2dtransformRotate)
 	ON_COMMAND(ID_2DTRANSFORM_SHEAR, &CCGLabView::On2dtransformShear)
 	ON_COMMAND(ID_2DTRANSFORM_SCALE, &CCGLabView::On2dtransformScale)
+	ON_COMMAND(ID_CLIPPING_COHENSUTHERLAND, &CCGLabView::OnClippingCohensutherland)
 END_MESSAGE_MAP()
 
 // CCGLabView construction/destruction
@@ -96,6 +101,10 @@ void CCGLabView::OnDraw(CDC* pDC)
     CBitmap* pOldBitmap = memDC.SelectObject(&memBitmap);
 
     memDC.FillSolidRect(rect, RGB(255, 255, 255));
+
+	if (m_isClipWindowSet && m_objects.empty()) {
+		m_clipWindow.Draw(&memDC);
+	}	
 
     // 绘制所有已完成的图形
     for (const auto& obj : m_objects) {
@@ -446,4 +455,35 @@ void CCGLabView::On2dtransformScale()
 			Invalidate();
 		}
 	}
+}
+
+
+void CCGLabView::OnClippingCohensutherland()
+{
+	// 首先设置裁剪窗口
+    ClipWindowDlg clipDlg;
+    if (clipDlg.DoModal() == IDOK) {
+        m_clipWindow.SetBounds(
+            clipDlg.m_xmin, 
+            clipDlg.m_ymin, 
+            clipDlg.m_xmax, 
+            clipDlg.m_ymax
+        );
+        m_isClipWindowSet = true;
+
+        // 然后设置直线
+        LineInputDlg lineDlg;
+        if (lineDlg.DoModal() == IDOK) {
+            auto line = std::make_shared<MyGraphics::Line>();
+            line->SetAlgorithm(MyGraphics::Line::ALGO_COHEN_SUTHERLAND);
+            line->SetPoints(
+                MyGraphics::Point2D(lineDlg.m_x0, lineDlg.m_y0),
+                MyGraphics::Point2D(lineDlg.m_x1, lineDlg.m_y1)
+            );
+            line->SetClipWindow(m_clipWindow);
+            line->GeneratePoints();
+            m_objects.push_back(line);
+            Invalidate();
+        }
+    } 
 }

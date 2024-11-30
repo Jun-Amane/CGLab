@@ -8,6 +8,7 @@
 #include "Line.hpp"
 #include "Circle.hpp"
 #include "Polygon.hpp"
+#include "ClipWindow.hpp"
 
 class CCGLabView : public CView
 {
@@ -53,6 +54,8 @@ protected:
 	CPoint m_lastMousePos;  // 用于存储最后的鼠标位置
 	void ClearScreen();
 	void DrawPrompt(CDC* pDC);  // 绘制提示信息
+	MyGraphics::ClipWindow m_clipWindow;
+	bool m_isClipWindowSet;
 
 // Generated message map functions
 protected:
@@ -75,6 +78,7 @@ public:
 	afx_msg void On2dtransformRotate();
 	afx_msg void On2dtransformShear();
 	afx_msg void On2dtransformScale();
+	afx_msg void OnClippingCohensutherland();
 };
 
 #ifndef _DEBUG  // debug version in CGLabView.cpp

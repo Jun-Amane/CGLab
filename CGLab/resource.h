@@ -27,6 +27,7 @@
 #define IDD_SHEAR                       320
 #define IDD_SCALE                       322
 #define IDD_REFLECT                     324
+#define IDD_CLIP_WINDOW                 326
 #define IDC_LINE_DDA_X0                 1000
 #define IDC_LINE_DDA_Y0                 1001
 #define IDC_LINE_DDA_X1                 1002
@@ -42,6 +43,7 @@
 #define IDC_ELLIPSE_B                   1012
 #define IDC_ROTATE_CY                   1012
 #define IDC_SACLE_CY                    1012
+#define IDC_CLIP_YMAX                   1012
 #define IDC_TRANSLATE_DX                1013
 #define IDC_TRANSLATE_DY                1014
 #define IDC_ROTATE_ANGLE                1015
@@ -56,6 +58,10 @@
 #define IDC_RADIO_LINE                  1025
 #define IDC_REFLECT_K                   1026
 #define IDC_REFLECT_B                   1027
+#define IDC_CLIP_XMIN                   1028
+#define IDC_CLIP_YMIN                   1029
+#define IDC_EDIT3                       1030
+#define IDC_CLIP_XMAX                   1030
 #define ID_LINE_DDA                     32771
 #define ID_LINE_MIDPOINT                32772
 #define ID_LINE_BRESENHAM               32773
@@ -87,9 +93,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        326
+#define _APS_NEXT_RESOURCE_VALUE        328
 #define _APS_NEXT_COMMAND_VALUE         32799
-#define _APS_NEXT_CONTROL_VALUE         1028
+#define _APS_NEXT_CONTROL_VALUE         1031
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif
