@@ -6,6 +6,7 @@
 
 #pragma once
 #include "Point2D.hpp"
+#include "ClipWindow.hpp"
 #include <vector>
 
 namespace MyGraphics {
@@ -22,6 +23,10 @@ namespace MyGraphics {
             }
             // 点是否属于多边形内部
             bool isPointInPolygon(const Point2D& p, const std::vector<Point2D>& vertices);
+
+            virtual std::vector<Point2D> ClipPolygon(const std::vector<Point2D>& vertices, const ClipWindow& window) {
+                return std::vector<Point2D>();
+            }
         };
     }
 }

@@ -7,6 +7,7 @@
 #include "pch.h"
 #include "Polygon.hpp"
 #include "PolygonAlgorithms.hpp"
+#include "WeilerAthertonAlgorithm.hpp"
 
 using namespace MyGraphics;
 using namespace MyGraphics::Algorithms;
@@ -15,6 +16,7 @@ Polygon::Polygon()
     : GraphicsObject(OT_POLYGON)
     , m_algorithm(ALGO_SCANLINE)
     , m_closed(false)
+    , m_isClipped(false)
     , m_polygonAlgorithm(std::make_unique<ScanLineFillAlgorithm>())
 {
 }
@@ -30,6 +32,9 @@ void Polygon::SetAlgorithm(Algorithm algo) {
         break;
     case ALGO_SEEDFILL_8:
         m_polygonAlgorithm = std::make_unique<SeedFill8Algorithm>();
+        break;
+    case ALGO_WEILER_ATHERTON:
+        m_polygonAlgorithm = std::make_unique<WeilerAthertonAlgorithm>();
         break;
     }
 }
@@ -53,7 +58,14 @@ void Polygon::Close() {
 
 void Polygon::GeneratePoints() {
     if (m_closed && m_polygonAlgorithm) {
-        if (m_algorithm == ALGO_SCANLINE) {
+        if (m_algorithm == ALGO_WEILER_ATHERTON) {
+            // 保存原始顶点
+            m_originalVertices = m_vertices;
+            // 执行裁剪
+            m_vertices = m_polygonAlgorithm->ClipPolygon(m_originalVertices, m_clipWindow);
+            m_isClipped = true;
+        }
+        else if (m_algorithm == ALGO_SCANLINE) {
             m_points = m_polygonAlgorithm->GeneratePoints(m_vertices);
         }
         else {
@@ -82,39 +94,61 @@ void Polygon::DrawSeed(CDC* pDC, const Point2D& point) {
 }
 
 void Polygon::Draw(CDC* pDC) {
-    // 绘制顶点
-    CPen vertexPen(PS_SOLID, 1, RGB(0, 0, 255));  // 蓝色顶点
+    // 1. 如果是裁剪算法，先绘制裁剪窗口
+    if (m_algorithm == ALGO_WEILER_ATHERTON) {
+        m_clipWindow.Draw(pDC);
+
+        // 如果有原始顶点，用虚线绘制原始多边形
+        if (!m_originalVertices.empty()) {
+            CPen dashPen(PS_DASH, 1, RGB(255, 128, 128));
+            CPen* pOldPen = pDC->SelectObject(&dashPen);
+
+            pDC->MoveTo(m_originalVertices[0].x, m_originalVertices[0].y);
+            for (size_t i = 1; i < m_originalVertices.size(); ++i) {
+                pDC->LineTo(m_originalVertices[i].x, m_originalVertices[i].y);
+            }
+            // 如果多边形已闭合，连接首尾顶点
+            if (m_closed && m_originalVertices.size() > 2) {
+                pDC->LineTo(m_originalVertices[0].x, m_originalVertices[0].y);
+            }
+
+            pDC->SelectObject(pOldPen);
+        }
+    }
+
+    // 2. 绘制顶点
+    CPen vertexPen(PS_SOLID, 1, RGB(0, 0, 255));  // 蓝色
     CBrush vertexBrush(RGB(0, 0, 255));
     CPen* pOldPen = pDC->SelectObject(&vertexPen);
     CBrush* pOldBrush = pDC->SelectObject(&vertexBrush);
-    
+
     for (const auto& vertex : m_vertices) {
         DrawVertex(pDC, vertex);
     }
 
-    // 绘制边
+    // 3. 绘制多边形边
     if (m_vertices.size() > 1) {
-        CPen edgePen(PS_SOLID, 1, RGB(0, 0, 0));  // 黑色边线
+        CPen edgePen(PS_SOLID, 1, RGB(0, 0, 0));  // 黑色
         pDC->SelectObject(&edgePen);
 
-        for (size_t i = 0; i < m_vertices.size() - 1; ++i) {
-            pDC->MoveTo(m_vertices[i].x, m_vertices[i].y);
-            pDC->LineTo(m_vertices[i + 1].x, m_vertices[i + 1].y);
+        // 绘制已有的边
+        pDC->MoveTo(m_vertices[0].x, m_vertices[0].y);
+        for (size_t i = 1; i < m_vertices.size(); ++i) {
+            pDC->LineTo(m_vertices[i].x, m_vertices[i].y);
         }
 
+        // 如果多边形已闭合且顶点数大于2，连接首尾顶点
         if (m_closed && m_vertices.size() > 2) {
-            // 如果多边形已闭合，绘制最后一条边
-            pDC->MoveTo(m_vertices.back().x, m_vertices.back().y);
-            pDC->LineTo(m_vertices.front().x, m_vertices.front().y);
+            pDC->LineTo(m_vertices[0].x, m_vertices[0].y);
         }
     }
 
-    // 绘制填充点
+    // 4. 绘制填充点
     for (const auto& point : m_points) {
         pDC->SetPixel(point.x, point.y, m_color);
     }
 
-    // 绘制种子点
+    // 5. 绘制种子点（如果有）
     if (m_hasSeed) {
         DrawSeed(pDC, m_seed);
     }

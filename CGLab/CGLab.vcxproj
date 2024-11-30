@@ -216,6 +216,7 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Transform2D.hpp" />
     <ClInclude Include="TransformDlg.hpp" />
+    <ClInclude Include="WeilerAthertonAlgorithm.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Circle.cpp" />
@@ -244,6 +245,7 @@
     <ClCompile Include="PolygonAlgorithms.cpp" />
     <ClCompile Include="Transform2D.cpp" />
     <ClCompile Include="TransformDlg.cpp" />
+    <ClCompile Include="WeilerAthertonAlgorithm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CGLab.rc" />

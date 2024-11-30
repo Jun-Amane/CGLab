@@ -79,6 +79,7 @@ public:
 	afx_msg void On2dtransformShear();
 	afx_msg void On2dtransformScale();
 	afx_msg void OnClippingCohensutherland();
+	afx_msg void OnClippingWeileratherton();
 };
 
 #ifndef _DEBUG  // debug version in CGLabView.cpp

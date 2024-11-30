@@ -65,6 +65,7 @@ BEGIN_MESSAGE_MAP(CCGLabView, CView)
 	ON_COMMAND(ID_2DTRANSFORM_SHEAR, &CCGLabView::On2dtransformShear)
 	ON_COMMAND(ID_2DTRANSFORM_SCALE, &CCGLabView::On2dtransformScale)
 	ON_COMMAND(ID_CLIPPING_COHENSUTHERLAND, &CCGLabView::OnClippingCohensutherland)
+	ON_COMMAND(ID_CLIPPING_WEILERATHERTON, &CCGLabView::OnClippingWeileratherton)
 END_MESSAGE_MAP()
 
 // CCGLabView construction/destruction
@@ -306,17 +307,20 @@ void CCGLabView::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CCGLabView::OnRButtonDown(UINT nFlags, CPoint point)
 {
-	if (m_isDrawingPolygon && m_currentPolygon) {
-		if (!m_currentPolygon->IsClosed()) {
-			m_currentPolygon->Close();
-			if (m_currentPolygonAlgorithm == MyGraphics::Polygon::ALGO_SCANLINE) {
-				m_currentPolygon->GeneratePoints();
-			}
-			m_objects.push_back(m_currentPolygon);
-			Invalidate();
-		}
-	}
-
+    if (m_isDrawingPolygon && m_currentPolygon) {
+        if (!m_currentPolygon->IsClosed()) {
+            m_currentPolygon->Close();
+            
+            if (m_currentPolygonAlgorithm == MyGraphics::Polygon::ALGO_WEILER_ATHERTON ||
+                m_currentPolygonAlgorithm == MyGraphics::Polygon::ALGO_SCANLINE) {
+                m_currentPolygon->GeneratePoints();
+            }
+            
+            m_objects.push_back(m_currentPolygon);
+            m_isDrawingPolygon = false;
+            Invalidate();
+        }
+    }
 
 	CView::OnRButtonDown(nFlags, point);
 }
@@ -486,4 +490,33 @@ void CCGLabView::OnClippingCohensutherland()
             Invalidate();
         }
     } 
+}
+
+
+void CCGLabView::OnClippingWeileratherton()
+{
+	// 首先设置裁剪窗口
+    ClipWindowDlg clipDlg;
+    if (clipDlg.DoModal() == IDOK) {
+        ClearScreen();  // 清除当前屏幕
+
+        // 创建新的多边形对象
+        m_isDrawingPolygon = true;
+        m_currentPolygon = std::make_shared<MyGraphics::Polygon>();
+        m_currentPolygon->SetAlgorithm(MyGraphics::Polygon::ALGO_WEILER_ATHERTON);
+        
+        // 设置裁剪窗口
+        MyGraphics::ClipWindow clipWindow(
+            clipDlg.m_xmin, 
+            clipDlg.m_ymin, 
+            clipDlg.m_xmax, 
+            clipDlg.m_ymax
+        );
+        m_currentPolygon->SetClipWindow(clipWindow);
+        m_currentPolygonAlgorithm = MyGraphics::Polygon::ALGO_WEILER_ATHERTON;
+
+        // 显示提示信息
+        MessageBox(_T("请用左键点击添加多边形顶点，右键点击结束绘制。"),
+                  _T("操作提示"), MB_ICONINFORMATION);
+    }
 }

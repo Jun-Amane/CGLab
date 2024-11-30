@@ -18,7 +18,8 @@ namespace MyGraphics {
         enum Algorithm {
             ALGO_SCANLINE,      // x-扫描线填充
             ALGO_SEEDFILL_4,    // 四邻域种子填充
-            ALGO_SEEDFILL_8     // 八邻域种子填充
+            ALGO_SEEDFILL_8,    // 八邻域种子填充
+            ALGO_WEILER_ATHERTON // WEILER_ATHERTON
         };
 
         Polygon();
@@ -38,6 +39,9 @@ namespace MyGraphics {
 
         void Transform(const Matrix3x3& matrix);
 
+        void SetClipWindow(const ClipWindow& window) { m_clipWindow = window; }
+        ClipWindow& GetClipWindow() { return m_clipWindow; }
+
     private:
         Algorithm m_algorithm;
         std::vector<Point2D> m_vertices;
@@ -48,6 +52,9 @@ namespace MyGraphics {
         bool m_closed;                 // 多边形是否闭合
         std::vector<Point2D> m_points; // 用于填充的点集
         std::unique_ptr<Algorithms::IPolygonAlgorithm> m_polygonAlgorithm;
+        ClipWindow m_clipWindow;
+        std::vector<Point2D> m_originalVertices;  // 保存原始顶点
+        bool m_isClipped;
 
     protected:
         void TransformVertices(const Matrix3x3& matrix);

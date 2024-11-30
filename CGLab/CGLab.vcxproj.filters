@@ -123,6 +123,9 @@
     <ClInclude Include="ClipWindowDlg.hpp">
       <Filter>Dialogs</Filter>
     </ClInclude>
+    <ClInclude Include="WeilerAthertonAlgorithm.hpp">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CGLab.cpp">
@@ -187,6 +190,9 @@
     </ClCompile>
     <ClCompile Include="ClipWindowDlg.cpp">
       <Filter>Dialogs</Filter>
+    </ClCompile>
+    <ClCompile Include="WeilerAthertonAlgorithm.cpp">
+      <Filter>Algorithms</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
