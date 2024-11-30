@@ -61,6 +61,7 @@
 #define IDC_CLIP_XMIN                   1028
 #define IDC_CLIP_YMIN                   1029
 #define IDC_CLIP_XMAX                   1030
+#define IDC_EDIT1                       1031
 #define ID_LINE_DDA                     32771
 #define ID_LINE_MIDPOINT                32772
 #define ID_LINE_BRESENHAM               32773
@@ -102,9 +103,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        328
+#define _APS_NEXT_RESOURCE_VALUE        329
 #define _APS_NEXT_COMMAND_VALUE         32809
-#define _APS_NEXT_CONTROL_VALUE         1031
+#define _APS_NEXT_CONTROL_VALUE         1033
 #define _APS_NEXT_SYMED_VALUE           310
 #endif
 #endif

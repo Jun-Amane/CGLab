@@ -212,14 +212,14 @@
     <ClCompile Include="Matrix4x4.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="Transform3D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Object3D.cpp">
       <Filter>Models</Filter>
     </ClCompile>
     <ClCompile Include="Frustum.cpp">
       <Filter>Models</Filter>
+    </ClCompile>
+    <ClCompile Include="Transform3D.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
