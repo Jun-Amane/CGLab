@@ -192,6 +192,7 @@
     <ClInclude Include="Ellipse.hpp" />
     <ClInclude Include="EllipseAlgorithms.hpp" />
     <ClInclude Include="EllipseInputDlg.hpp" />
+    <ClInclude Include="Frustum.hpp" />
     <ClInclude Include="ICircleAlgorithm.hpp" />
     <ClInclude Include="IEllipseAlgorithm.hpp" />
     <ClInclude Include="ILineAlgorithm.hpp" />
@@ -208,13 +209,17 @@
     <ClInclude Include="LineInputDlg.hpp" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="Matrix3x3.hpp" />
+    <ClInclude Include="Matrix4x4.hpp" />
+    <ClInclude Include="Object3D.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Point2D.hpp" />
+    <ClInclude Include="Point3D.hpp" />
     <ClInclude Include="Polygon.hpp" />
     <ClInclude Include="PolygonAlgorithms.hpp" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Transform2D.hpp" />
+    <ClInclude Include="Transform3D.hpp" />
     <ClInclude Include="TransformDlg.hpp" />
     <ClInclude Include="WeilerAthertonAlgorithm.hpp" />
   </ItemGroup>
@@ -226,6 +231,7 @@
     <ClCompile Include="Ellipse.cpp" />
     <ClCompile Include="EllipseAlgorithms.cpp" />
     <ClCompile Include="EllipseInputDlg.cpp" />
+    <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="LineAlgorithms.cpp" />
     <ClCompile Include="CGLab.cpp" />
@@ -235,6 +241,8 @@
     <ClCompile Include="LineInputDlg.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="Matrix3x3.cpp" />
+    <ClCompile Include="Matrix4x4.cpp" />
+    <ClCompile Include="Object3D.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -244,6 +252,7 @@
     <ClCompile Include="Polygon.cpp" />
     <ClCompile Include="PolygonAlgorithms.cpp" />
     <ClCompile Include="Transform2D.cpp" />
+    <ClCompile Include="Transform3D.cpp" />
     <ClCompile Include="TransformDlg.cpp" />
     <ClCompile Include="WeilerAthertonAlgorithm.cpp" />
   </ItemGroup>

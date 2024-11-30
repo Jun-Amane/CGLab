@@ -60,7 +60,6 @@
 #define IDC_REFLECT_B                   1027
 #define IDC_CLIP_XMIN                   1028
 #define IDC_CLIP_YMIN                   1029
-#define IDC_EDIT3                       1030
 #define IDC_CLIP_XMAX                   1030
 #define ID_LINE_DDA                     32771
 #define ID_LINE_MIDPOINT                32772
@@ -88,13 +87,23 @@
 #define ID_2DTRANSFORM_SHEAR            32796
 #define ID_2DTRANSFORM_SCALE            32797
 #define ID_2DTRANSFORM_REFLECT          32798
+#define ID_3DTRANSFORM                  32799
+#define ID_3DTRANSFORM_TRANSLATE        32800
+#define ID_3DTRANSFORM_ROTATE           32801
+#define ID_3DTRANSFORM_SHEAR            32802
+#define ID_3DTRANSFORM_SCALE            32803
+#define ID_3DTRANSFORM_REFLECT          32804
+#define ID_3DTRANSFORM_ORIGINAL         32805
+#define ID_3DTRANSFORM_3                32806
+#define ID_CLEAN_CLEARALL               32807
+#define ID_FILE_CLEAR                   32808
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        328
-#define _APS_NEXT_COMMAND_VALUE         32799
+#define _APS_NEXT_COMMAND_VALUE         32809
 #define _APS_NEXT_CONTROL_VALUE         1031
 #define _APS_NEXT_SYMED_VALUE           310
 #endif

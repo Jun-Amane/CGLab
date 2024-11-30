@@ -4,10 +4,14 @@
 
 #pragma once
 #include "Point2D.hpp"
+#include "Point3D.hpp"
+#include "Matrix3x3.hpp"
+#include "Matrix4x4.hpp"
 #include "GraphicsObject.hpp"
 #include "Line.hpp"
 #include "Circle.hpp"
 #include "Polygon.hpp"
+#include "Frustum.hpp"
 #include "ClipWindow.hpp"
 
 class CCGLabView : public CView
@@ -57,6 +61,23 @@ protected:
 	MyGraphics::ClipWindow m_clipWindow;
 	bool m_isClipWindowSet;
 
+	// 3D相关
+    std::shared_ptr<MyGraphics::Frustum> m_frustum;  // 四棱台对象
+    std::vector<MyGraphics::Point2D> m_projectedPoints;  // 投影点
+    bool m_is3DMode;  // 是否在3D模式
+	bool m_isOrthographic;  // true为三视图，false为斜二侧投影
+    
+    // 3D辅助函数
+    MyGraphics::Matrix4x4 GetObliqueProjMatrix(double alpha = 45.0, double beta = 45.0);
+    std::vector<MyGraphics::Point2D> ProjectPoints(
+        const std::vector<MyGraphics::Point3D>& points3d, 
+        const MyGraphics::Matrix4x4& projMatrix);
+    void Draw3DObject(CDC* pDC);
+	void Draw3ViewsObject(CDC* pDC);
+    void DrawSingleView(CDC* pDC, const std::vector<MyGraphics::Point2D>& points, CRect rect, const CString& title);
+    void ClearAll();  // 清除所有对象
+
+
 // Generated message map functions
 protected:
 	DECLARE_MESSAGE_MAP()
@@ -80,6 +101,14 @@ public:
 	afx_msg void On2dtransformScale();
 	afx_msg void OnClippingCohensutherland();
 	afx_msg void OnClippingWeileratherton();
+	afx_msg void On3dtransformOriginal();
+	afx_msg void On3dtransformTranslate();
+	afx_msg void On3dtransformRotate();
+	afx_msg void On3dtransformShear();
+	afx_msg void On3dtransformScale();
+	afx_msg void On3dtransformReflect();
+	afx_msg void On3dtransformView();
+	afx_msg void OnFileClear();
 };
 
 #ifndef _DEBUG  // debug version in CGLabView.cpp
