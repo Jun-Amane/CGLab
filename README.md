@@ -2,6 +2,18 @@
 
 基于MFC的计算机图形学基本算法可视化实现，包含直线、圆、椭圆生成算法，多边形填充算法，二维/三维几何变换等经典图形学算法的演示。
 
+## 截图
+<table>
+<tr>
+<td><img src="screenshoots/1.png" width="1024" alt="1"/></td>
+<td><img src="screenshoots/1.png" width="1024" alt="2"/></td>
+</tr>
+<tr>
+<td><img src="screenshoots/1.png" width="1024" alt="3"/></td>
+<td><img src="screenshoots/1.png" width="1024" alt="4"/></td>
+</tr>
+</table>
+
 ## 功能特性
 
 ### 1. 直线生成算法
