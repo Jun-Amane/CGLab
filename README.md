@@ -6,11 +6,11 @@
 <table>
 <tr>
 <td><img src="screenshoots/1.png" width="1024" alt="1"/></td>
-<td><img src="screenshoots/1.png" width="1024" alt="2"/></td>
+<td><img src="screenshoots/2.png" width="1024" alt="2"/></td>
 </tr>
 <tr>
-<td><img src="screenshoots/1.png" width="1024" alt="3"/></td>
-<td><img src="screenshoots/1.png" width="1024" alt="4"/></td>
+<td><img src="screenshoots/3.png" width="1024" alt="3"/></td>
+<td><img src="screenshoots/4.png" width="1024" alt="4"/></td>
 </tr>
 </table>
 
